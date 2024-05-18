@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:twitter_clone/views/home_view.dart';
+import 'package:twitter_clone/views/home/home_view.dart';
+import 'package:twitter_clone/views/home/search_view.dart';
 
 class TwitterTabbarView extends StatefulWidget {
   const TwitterTabbarView({super.key});
@@ -13,6 +14,7 @@ class _TwitterTabbarViewState extends State<TwitterTabbarView> {
   bool isHeaderHide = false;
   double lastOffset = 0;
   ScrollController scrollController = ScrollController();
+  int currentIdx = 0;
 
   @override
   void initState() {
@@ -48,6 +50,7 @@ class _TwitterTabbarViewState extends State<TwitterTabbarView> {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 4,
+      initialIndex: 0,
       child: Scaffold(
         bottomNavigationBar: BottomAppBar(
           child: buildTabbarItems(),
@@ -60,7 +63,7 @@ class _TwitterTabbarViewState extends State<TwitterTabbarView> {
                 child: TabBarView(
                   children: [
                     HomeView(scrollController: scrollController,),
-                    const Text('B'),
+                    const SearchView(),
                     const Text('C'),
                     const Text('D'),
                   ],
@@ -69,8 +72,7 @@ class _TwitterTabbarViewState extends State<TwitterTabbarView> {
             ],
           ),
         ),
-        floatingActionButton: buildFloatingActionButon(),
-
+        
       ),
     );
   }
@@ -88,34 +90,69 @@ class _TwitterTabbarViewState extends State<TwitterTabbarView> {
   }
 
   buildAppBarItems(){
-    return Wrap(
-      crossAxisAlignment: WrapCrossAlignment.center,
-      spacing: 10,
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         CircleAvatar(backgroundImage: NetworkImage(_profilFotoUrl)),
-        Text('Home', style: titleTextStyle),
+        const SizedBox(width:10),
+        Expanded(child: buildCenterAppBar()),
+        const SizedBox(width:10),
+        const Icon(Icons.access_alarm, color: Colors.blue,)
       ],
     );
   }
 
+  buildCenterAppBar(){
+    if(currentIdx == 0){
+      return Text('Home', style: titleTextStyle);
+    }
+    else if(currentIdx == 1){
+      return TextField(
+        maxLines: 1,
+        decoration: InputDecoration(
+          contentPadding: const EdgeInsets.all(0),
+          hintText: "Search Tweet",
+          prefixIcon: const Icon(Icons.search, color: Colors.grey),
+          filled: true,
+          fillColor: Colors.white,
+          focusedBorder: OutlineInputBorder(
+            borderSide: const BorderSide(color: Colors.grey),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          border: OutlineInputBorder(
+            borderSide: const BorderSide(color: Colors.grey),
+            borderRadius: BorderRadius.circular(16),
+          ),
+        ),
+      );
+    }
+    else{
+      return Container();
+    }
+  }
+
+
+
+
+
   buildTabbarItems() {
-    return const TabBar(
-      tabs: [
-        Tab(icon: Icon(Icons.dashboard),),
-        Tab(icon: Icon(Icons.dashboard),),
+    return TabBar(
+      isScrollable: false,
+      onTap: (index){
+        setState(() {
+          currentIdx = index;
+        });
+      },
+      tabs: const [
+        Tab(icon: Icon(Icons.home),),
+        Tab(icon: Icon(Icons.search),),
         Tab(icon: Icon(Icons.dashboard),),
         Tab(icon: Icon(Icons.settings),),
       ],
     );
   }
 
-  buildFloatingActionButon() {
-    return FloatingActionButton(
-      backgroundColor: Colors.indigo,
-      onPressed: (){},
-      child: const Icon(Icons.adb, color: Colors.white),
-    );
-  }
+
 
 }
 

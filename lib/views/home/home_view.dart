@@ -18,6 +18,7 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: buildListView(),
+      floatingActionButton: buildFloatingActionButon(),
     );
   }
 
@@ -87,5 +88,12 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
+  buildFloatingActionButon() {
+    return FloatingActionButton(
+      backgroundColor: Colors.indigo,
+      onPressed: (){},
+      child: const Icon(Icons.adb, color: Colors.white),
+    );
+  }
 }
 
